@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><h1>Welcome to Admin Page ... </h1></title>
+</head>
+<body>
+  <h1>Welcome to Admin Page"<%= name %>"</h1>
+    <form method="post">
+        <fieldset>
+            <legend>Admin</legend>
+            <h2>Admin Information</h2>
+            <table>
+
+
+              <tr>
+                <td>Name:</td><td><%= userlist.name %></td>
+              </tr>
+              <tr>
+                <td>Phone:</td><td><%= userlist.phone %></td>
+              </tr>
+              <tr>
+                <td>Address:</td><td><%= userlist.address %><td>
+              </tr>
+              <tr>
+                <td>Gender:</td><td><%= userlist.gender %></td>
+              </tr>
+
+              <tr>
+                <td><input type="submit" name="choice" value="AddEmployee"></td>
+              </tr>
+              <tr>
+                <td><input type="submit" name="choice" value="AllEmployeeList"></td>
+              </tr>
+              <tr>
+                <td><input type="submit" name="choice" value="Logout"></td>
+              </tr>
+            </table>
+        </fieldset>
+    </form>
+</body>

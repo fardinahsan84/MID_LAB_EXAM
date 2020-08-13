@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Employee List page</title>
+
+
+</head>
+<body>
+	<h1>All Employee List </h1>
+
+	<h3>Employee List</h3>
+	<table border="1">
+		<tr>
+			<th>ID</th>
+			<th>NAME</th>
+			<th>PHONE</th>
+			<th>ADDRESS</th>
+			<th>GENDER</th>
+
+		</tr>
+
+		<% for(var i=0; i < userList.length; i++){ %>
+		<tr>
+			<td><%= userList[i].id %></td>
+			<td><%= userList[i].name %></td>
+      <td><%= userList[i].phone %></td>
+			<td><%= userList[i].address %></td>
+			<td><%= userList[i].gender %></td>
+			<td><a href="/admin/update/<%= userList[i].id %>">EDIT</a> |
+				  <a href="/admin/delete/<%= userList[i].id %>"> DELETE </a></td>
+		</tr>
+		<% } %>
+    <tr>
+
+    </tr>
+	</table>
+  <tr>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td> <a href="/logout">Logout</a></td>|
+		<td><a href="/admin">Back</a></td>
+  </tr>
+
+</body>
+</html>
