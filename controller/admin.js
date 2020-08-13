@@ -38,6 +38,40 @@ router.get('/AllEmployeeList', function(req, res){
 	});
 });
 
+//AddEmployee
+router.get('/AddEmployee',function(req,res){
+  if(req.session.username !=null){
+    res.render('AddEmployee');
+  }else{
+    res.redirect('/login');
+  }
+});
+
+router.post('/AddEmployee',function(req,res){
+  if(req.session.username != null){
+
+		var user ={
+      name        : req.body.name,
+			username 		: req.body.username,
+			password   	: req.body.password,
+      phone       : req.body.phone,
+      address     : req.body.address,
+      gender      : req.body.gender,
+			userType	  : req.body.userType
+		}
+
+		userModel.insert(user, function(status){
+			if(status){
+				res.redirect('/admin/AllEmployeeList');
+			}else{
+				res.redirect('/admin/AddEmployee');
+			}
+		});
+	}else{
+		res.redirect('/login');
+	}
+});
+
 //DELETE
 router.get('/delete/:id',function(req,res){
   if(req.session.username== null){
