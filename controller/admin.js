@@ -32,10 +32,28 @@ router.post('/',function(req,res){
 //AllEmployeeList
 router.get('/AllEmployeeList', function(req, res){
 
-	userModel.getAll(function(results){
+	userModel.getAllEmployee("employee",function(results){
     console.log(results);
 		res.render('admin/AllEmployee', { userList : results, username: req.session.username});
 	});
+});
+
+router.post('/AllEmployeeList', function(req, res){
+	var search = req.body.search;
+	if(search == ""){
+		res.redirect('/admin/AllEmployeeList');
+	}
+	else{
+				userModel.getSearchByID(search,"employee", function(results){
+          if(results.length > 0){
+				       res.render('admin/search',{userList: results});
+            }else{
+               console.log('Search not found');
+            }
+			});
+		}
+
+
 });
 
 //AddEmployee
@@ -50,23 +68,23 @@ router.get('/AddEmployee',function(req,res){
 router.post('/AddEmployee',function(req,res){
   if(req.session.username != null){
 
-		var user ={
-      name        : req.body.name,
-			username 		: req.body.username,
-			password   	: req.body.password,
-      phone       : req.body.phone,
-      address     : req.body.address,
-      gender      : req.body.gender,
-			userType	  : "employee"
-		}
+      		var user ={
+            name        : req.body.name,
+      			username 		: req.body.username,
+      			password   	: req.body.password,
+            phone       : req.body.phone,
+            address     : req.body.address,
+            gender      : req.body.gender,
+      			userType	  : "employee"
+      		}
 
-		userModel.insert(user, function(status){
-			if(status){
-				res.redirect('/admin/AllEmployeeList');
-			}else{
-				res.redirect('/admin/AddEmployee');
-			}
-		});
+      		userModel.insert(user, function(status){
+      			if(status){
+      				res.redirect('/admin/AllEmployeeList');
+      			}else{
+      				res.redirect('/admin/AddEmployee');
+      			}
+      		});
 	}else{
 		res.redirect('/logout');
 	}
@@ -130,4 +148,5 @@ router.post('/delete/:id',function(req,res){
           res.redirect('/admin/AllEmployeeList');
         }
 });
+
 module.exports = router;

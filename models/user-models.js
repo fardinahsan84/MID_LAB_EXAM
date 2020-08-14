@@ -1,8 +1,8 @@
 var db = require('./db');
 
 module.exports ={
-  getAll:function(callback){
-		var sql = "select * from users";
+  getAllEmployee:function(userType,callback){
+		var sql = "select * from users where userType='"+userType+"'";
 		db.getResults(sql, function(results){
 			if(results.length > 0){
 				callback(results);
@@ -79,6 +79,16 @@ module.exports ={
 				callback(true);
 			}else{
 				callback(false);
+			}
+		});
+	},
+  getSearchByID : function(search,userType, callback){
+		var sql = "select * from users where (id='"+search+"' or name='"+search+"' or username='"+search+"') and userType='"+userType+"'";
+		db.getResults(sql, function(results){
+			if(results.length > 0 ) {
+				callback(results);
+			}else{
+				callback([]);
 			}
 		});
 	}

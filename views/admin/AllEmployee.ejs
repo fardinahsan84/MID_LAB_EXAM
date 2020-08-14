@@ -6,11 +6,29 @@
 	<style>
 			h3 {text-align: right;}
 	</style>
+	<script>
+				function validateForm(){
+				var x = document.forms["searchForm"]["search"].value;
+				if (x == "") {
+							alert("Search field cannot be empty!!  Put an user ID or NAME !!!");
+							return false;
+				}
+				else{
+							return true;
+				}
+			}
+	</script>
 </head>
 <body>
+	<form name="searchForm" onsubmit="return validateForm()" method ="post" required>
 	<center>
 	<h1>All Employee List </h1>
 	<h3><a href="/admin">Back</a>|<a href="/logout">Logout</a></h3>
+	<table>
+		<tr>
+			<td><input type="text" placeholder="type id/name.." name="search" ></td> <td></td> <td><input type="submit" name="choice" value="Search"></td>
+			</tr>
+	</table>
 	<table border="1">
 		<tr>
 			<th>ID</th>
@@ -36,6 +54,7 @@
 
     </tr>
 	</table>
-</center>
+  </center>
+ </form>
 </body>
 </html>
