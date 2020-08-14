@@ -39,9 +39,9 @@ var errors = validationResult(req);
                     {
                       res.redirect('/admin');
                     }
-                    else if (results[0].userType=="student")
+                    else if (results[0].userType=="employee")
                     {
-                      console.log('student controller');
+                      res.redirect('/employee');
                     }
               });
             }
