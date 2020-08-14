@@ -4,7 +4,7 @@ var exSession =       require('express-session');
 var login =           require('./controller/login');
 var logout=           require('./controller/logout');
 var admin =           require('./controller/admin');
-//var employee=         require('./controller/employee');
+var employee=         require('./controller/employee');
 
 var app =           express();
 
@@ -19,7 +19,7 @@ app.use(exSession({secret: 'my secret value', saveUnitialized: true,resave: fals
 app.use('/login',login);
 app.use('/logout',logout);
 app.use('/admin',admin);
-//app.use('/employee',employee);
+app.use('/employee',employee);
 
 //routes(app);
 

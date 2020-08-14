@@ -5,7 +5,7 @@ var userModel = require.main.require('./models/user-models');
 
 router.get('/',function(req,res){
   if(req.session.username== null){
-    res.redirect('/login');
+    res.redirect('/logout');
   }
   else{
     var sql = "select * from users where username='"+req.session.username+"'";
@@ -25,7 +25,7 @@ router.post('/',function(req,res){
   }
   else if(req.body.choice=="Logout"){
     req.session.username=null;
-    res.redirect('/login');
+    res.redirect('/logout');
   }
 });
 
@@ -43,7 +43,7 @@ router.get('/AddEmployee',function(req,res){
   if(req.session.username !=null){
     res.render('AddEmployee');
   }else{
-    res.redirect('/login');
+    res.redirect('/logout');
   }
 });
 
@@ -68,14 +68,14 @@ router.post('/AddEmployee',function(req,res){
 			}
 		});
 	}else{
-		res.redirect('/login');
+		res.redirect('/logout');
 	}
 });
 
 //DELETE
 router.get('/delete/:id',function(req,res){
   if(req.session.username== null){
-    res.redirect('/login');
+    res.redirect('/logout');
   }
   else{
     userModel.getById(req.params.id, function(result){
