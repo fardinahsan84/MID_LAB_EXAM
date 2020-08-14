@@ -24,6 +24,29 @@ module.exports ={
 		});
 	},
 
+  getUserByUsername: function(username, callback){
+    var sql = "select * from users where username='"+username+"'";
+    db.getResults(sql, function(result){
+      console.log('user module error')
+      if(result.length > 0){
+        callback(result);
+      }else{
+        callback([]);
+      }
+    });
+  },
+
+  validate: function(user, callback){
+    var sql = "select * from users where username='"+user.username+"' and password='"+user.password+"'";
+    db.getResults(sql, function(result){
+      if(result.length > 0){
+        callback(true);
+      }else{
+        callback(false);
+      }
+    });
+  },
+
   insert: function(user, callback){
 		var sql = "insert into users values('', '"+user.name+"', '"+user.username+"', '"+user.password+"', '"+user.phone+"', '"+user.address+"', '"+user.gender+"', '"+user.userType+"')";
 

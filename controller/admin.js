@@ -11,7 +11,7 @@ router.get('/',function(req,res){
     var sql = "select * from users where username='"+req.session.username+"'";
     db.getResults(sql,function(results){
 
-      res.render('admin',{userlist: results[0], name : req.session.username});
+      res.render('admin/index',{userlist: results[0], name : req.session.username});
     });
   }
 });
@@ -34,14 +34,14 @@ router.get('/AllEmployeeList', function(req, res){
 
 	userModel.getAll(function(results){
     console.log(results);
-		res.render('AllEmployeeList', { userList : results, username: req.session.username});
+		res.render('admin/AllEmployee', { userList : results, username: req.session.username});
 	});
 });
 
 //AddEmployee
 router.get('/AddEmployee',function(req,res){
   if(req.session.username !=null){
-    res.render('AddEmployee');
+    res.render('admin/AddEmployee');
   }else{
     res.redirect('/logout');
   }
@@ -57,7 +57,7 @@ router.post('/AddEmployee',function(req,res){
       phone       : req.body.phone,
       address     : req.body.address,
       gender      : req.body.gender,
-			userType	  : req.body.userType
+			userType	  : "employee"
 		}
 
 		userModel.insert(user, function(status){
@@ -72,6 +72,37 @@ router.post('/AddEmployee',function(req,res){
 	}
 });
 
+//update
+
+router.get('/update/:id', function(req, res){
+
+	userModel.getById(req.params.id, function(result){
+		res.render('admin/update',{user : result});
+	});
+});
+
+router.post('/update/:id', function(req, res){
+
+	var user = {
+    //username: req.body.username,
+		password: req.body.password,
+    phone: req.body.phone,
+    address:req.body.address,
+		//userType: req.body.userType,
+    //gender : req.body.gender,
+		id: req.params.id
+	};
+
+	userModel.update(user, function(status){
+		if(status){
+			res.redirect('/admin/AllEmployeeList');
+
+		}else{
+			res.redirect('/admin/update/'+req.params.id);
+		}
+	});
+});
+
 //DELETE
 router.get('/delete/:id',function(req,res){
   if(req.session.username== null){
@@ -79,18 +110,24 @@ router.get('/delete/:id',function(req,res){
   }
   else{
     userModel.getById(req.params.id, function(result){
-  		res.render('delete',{user : result});
+  		res.render('admin/delete',{user : result});
   	});
   }
 });
 
 router.post('/delete/:id',function(req,res){
-    userModel.delete(req.body.id, function(status){
-      if(status){
-        res.redirect('/admin/AllEmployeeList');
-      }else{
-        res.redirect('/admin/delete'+req.body.id);
-      }
-    });
+
+        if(req.body.choice=="Yes"){
+          userModel.delete(req.body.id, function(status){
+            if(status){
+              res.redirect('/admin/AllEmployeeList');
+            }else{
+              res.redirect('/admin/delete'+req.body.id);
+            }
+          });
+        }
+        else if(req.body.choice=="No"){
+          res.redirect('/admin/AllEmployeeList');
+        }
 });
 module.exports = router;
