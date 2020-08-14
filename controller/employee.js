@@ -31,16 +31,55 @@ router.get('/MyProfile',function(req,res){
       });
 });
 
-router.post('/MyProfile',function(req,res){
-  res.redirect('/employee')
+
+router.get('/UpdateProfile',function(req,res){
+  userModel.getUserByUsername(req.session.username, function(results){
+    if(results.length > 0){
+         res.render('employee/UpdateProfile',{user: results[0]});
+      }else{
+         console.log('Search not found');
+      }
+  });
 });
 
-router.get('/MyProfile',function(req,res){
-  res.render('MyProfile');
-});
+router.post('/UpdateProfile/:id',function(req,res){
+  if (!req.files){
+       return res.status(400).send('No files were uploaded.');
+  }else{
+       var file = req.files.uploaded_image;
+       var img_name=file.name;
 
-router.post('/MyProfile',function(req,res){
-  res.redirect('/employee')
-});
+      if(file.mimetype == "image/jpeg" ||file.mimetype == "image/png"||file.mimetype == "image/gif" ){
+
+             file.mv('public/images/upload_images/'+file.name, function(err) {
+
+              if(err){
+
+                 return res.status(500).send(err);
+              }else{
+                    var user = {
+                      password     :req.body.password,
+                      phone 			 :req.body.phone,
+                      address      :req.body.address,
+                      id           :req.params.id
+                      //image			   :req.img_name
+                    }
+
+
+                    userModel.updateEmployee(user,img_name, function(status){
+                        if(status){
+                          res.redirect('/employee/MyProfile');
+                        }else{
+                          res.redirect('/employee/UpdateProfile');
+                        }
+                   });
+             }
+            });
+      }else {
+           message = "This format is not allowed , please upload file with '.png','.gif','.jpg'";
+           res.render('employee/UpdateProfile',{message: message});
+         }
+    }
+  });
 
 module.exports = router;

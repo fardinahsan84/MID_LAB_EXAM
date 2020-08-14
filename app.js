@@ -4,6 +4,8 @@ var bodyParser =      require('body-parser');
 var exSession =       require('express-session');
 var expressValidator= require('express-validator');
 var cookieParser	=   require('cookie-parser');
+var fileUpload    =      require('express-fileupload');
+var path					=			 require('path');
 
 var login =           require('./controller/login');
 var logout=           require('./controller/logout');
@@ -14,12 +16,15 @@ var app =           express();
 
 
 app.set('view engine', 'ejs');
-
+app.set('views', __dirname + '/views');
 //middleware
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(exSession({secret: 'my secret value', saveUnitialized: true,resave: false}));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(fileUpload());
+
 app.use('/login',login);
 app.use('/logout',logout);
 app.use('/admin',admin);
