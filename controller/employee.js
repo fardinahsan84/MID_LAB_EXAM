@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var userModel = require.main.require('./models/user-models');
-const { check, validationResult } = require('express-validator');
+const { body, validationResult } = require('express-validator');
 
 
 router.get('/',function(req,res){
@@ -44,9 +44,12 @@ router.get('/UpdateProfile',function(req,res){
   });
 });
 
-router.post('/UpdateProfile/:id',[
-            check('password','Must be at least 8 Chars long').isLength({ min: 8 }),
-            check('phone')
+router.post('/UpdateProfile/:id', function(req,res){/*[
+            body('password')
+                   .isLength({ min: 8 })
+                   .matches(/^(?=.*d)(?=.*[a-z])(?=.[A-Z])[a-zA-Z\d@$.!%*#?&]/)
+                   .withMessage('Password should be equal or greater than 8 character and contains (A-Z, a-z, 0-9, and special sign like @,#,$,& etc)'),
+            body('phone')
                   .isNumeric()
                   .withMessage('Must be a numeric value')
                   .isLength({ min: 11 , max: 11})
@@ -54,8 +57,9 @@ router.post('/UpdateProfile/:id',[
           ],function(req,res){
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
+                console.log(errors);
                 return res.status(422).json({ errors: errors.array() })
-            }else{
+            }else{*/
 
                 if (!req.files){
                      return res.status(400).send('No files were uploaded.');
@@ -93,7 +97,7 @@ router.post('/UpdateProfile/:id',[
                          res.render('employee/UpdateProfile',{message: message});
                        }
                   }
-                }
+
   });
 
 module.exports = router;
