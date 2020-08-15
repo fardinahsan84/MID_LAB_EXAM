@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var userModel = require.main.require('./models/user-models');
+const { check, validationResult } = require('express-validator');
+
 
 router.get('/',function(req,res){
   if(req.session.username== null){
@@ -42,44 +44,56 @@ router.get('/UpdateProfile',function(req,res){
   });
 });
 
-router.post('/UpdateProfile/:id',function(req,res){
-  if (!req.files){
-       return res.status(400).send('No files were uploaded.');
-  }else{
-       var file = req.files.uploaded_image;
-       var img_name=file.name;
+router.post('/UpdateProfile/:id',[
+            check('password','Must be at least 8 Chars long').isLength({ min: 8 }),
+            check('phone')
+                  .isNumeric()
+                  .withMessage('Must be a numeric value')
+                  .isLength({ min: 11 , max: 11})
+                  .withMessage('Must be exactly 11 chars long')
+          ],function(req,res){
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) {
+                return res.status(422).json({ errors: errors.array() })
+            }else{
 
-      if(file.mimetype == "image/jpeg" ||file.mimetype == "image/png"||file.mimetype == "image/gif" ){
+                if (!req.files){
+                     return res.status(400).send('No files were uploaded.');
+                }else{
+                     var file = req.files.uploaded_image;
+                     var img_name=file.name;
 
-             file.mv('public/images/upload_images/'+file.name, function(err) {
+                    if(file.mimetype == "image/jpeg" ||file.mimetype == "image/png"||file.mimetype == "image/gif" ){
 
-              if(err){
+                           file.mv('public/images/upload_images/'+file.name, function(err) {
 
-                 return res.status(500).send(err);
-              }else{
-                    var user = {
-                      password     :req.body.password,
-                      phone 			 :req.body.phone,
-                      address      :req.body.address,
-                      id           :req.params.id
-                      //image			   :req.img_name
-                    }
+                            if(err){
+
+                               return res.status(500).send(err);
+                            }else{
+                                  var user = {
+                                    password     :req.body.password,
+                                    phone 			 :req.body.phone,
+                                    address      :req.body.address,
+                                    id           :req.params.id
+                                  }
 
 
-                    userModel.updateEmployee(user,img_name, function(status){
-                        if(status){
-                          res.redirect('/employee/MyProfile');
-                        }else{
-                          res.redirect('/employee/UpdateProfile');
-                        }
-                   });
-             }
-            });
-      }else {
-           message = "This format is not allowed , please upload file with '.png','.gif','.jpg'";
-           res.render('employee/UpdateProfile',{message: message});
-         }
-    }
+                                  userModel.updateEmployee(user,img_name, function(status){
+                                      if(status){
+                                        res.redirect('/employee/MyProfile');
+                                      }else{
+                                        res.redirect('/employee/UpdateProfile');
+                                      }
+                                 });
+                           }
+                          });
+                    }else {
+                         message = "This format is not allowed , please upload file with '.png','.gif','.jpg'";
+                         res.render('employee/UpdateProfile',{message: message});
+                       }
+                  }
+                }
   });
 
 module.exports = router;
